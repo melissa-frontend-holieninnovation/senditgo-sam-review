@@ -1,8 +1,8 @@
 import { copy } from './approved.js';
 
 const cast = [
-  { id:'mate', film:'run-mate-film.mp4?v=3c50ba925113', name:'The Run Mate', bio:'Inspired by Samwise Gamgee, the mate who stays when the job gets hard. At the depot laptop, he helps the dispatcher fit a late drop into the run. She makes the final call.',
-    shots:['SAM checks the late drop on the laptop with the dispatcher beside him.', 'He points to the stop where the late drop could fit.', 'She checks the route and clicks to confirm it. SAM steps back.'] },
+  { id:'mate', film:'run-mate-film.mp4?v=becca51740c6', name:'The Run Mate', bio:'Inspired by Samwise Gamgee, the mate who stays when the job gets hard. At the depot laptop, he helps the dispatcher fit a late drop into the run. She makes the final call.',
+    shots:['SAM types the order number into Fleet Web at the depot computer.', 'He finds a gap on Olivia Parker’s run and checks the impact on the map.', 'The dispatcher reviews the reassignment in Fleet Web.'] },
   { id:'loader', film:'load-planner-film.mp4?v=3d1fcb4318d3', name:'The Load Planner', bio:'He checks the cartons against the space in the delivery SUV before the run leaves the depot.',
     shots:['SAM opens the load plan on his laptop beside the two cartons.', 'He checks the width of the larger carton at the bench.', 'He points out the load plan on the laptop so his teammate can review it.'] },
   { id:'relay', film:'relay-driver-film.mp4?v=66fbd6f50302', name:'The Relay Driver', bio:'He handles the late shift on a regional run. At changeover, he makes sure the incoming driver has the latest plan.',
@@ -12,6 +12,11 @@ const stages = [
   {detail:'Dispatch opens the order on Sophie Taylor’s route.'},
   {detail:'Dispatch reviews the proposed insertion on Olivia Parker’s run and its estimated effect on time and distance.'},
   {detail:'After reassignment, Order Status shows the order on Olivia’s receiving run sheet.'}
+];
+const mateScreenDetails = [
+  'SAM searches for order S0170025 on Sophie Taylor’s run.',
+  'Fleet Web previews the insertion on Olivia Parker’s run before the change is applied.',
+  'Fleet Web displays “Run Sheets updated” after the reassignment.'
 ];
 const $ = id => document.getElementById(id);
 const choices = Array.from(document.querySelectorAll('#choices button'));
@@ -33,18 +38,20 @@ function stop() {
   $('control').textContent = film.ended ? 'Replay scene' : 'Play scene';
 }
 function paint() {
-  const stage = stages[step];
+  const isRunMate = actor.id === 'mate';
+  const detail = isRunMate ? mateScreenDetails[step] : stages[step].detail;
   $('name').textContent = actor.name;
   $('bio').textContent = actor.bio;
   $('caption').textContent = actor.shots[step];
-  $('frame').style.backgroundImage = 'url(./sam/' + actor.id + '.webp?v=' + (actor.id === 'mate' ? 'ef27a849367e' : '8') + ')';
+  $('frame').style.backgroundImage = 'url(./sam/' + actor.id + '.webp?v=' + (actor.id === 'mate' ? '7330d893be6e' : '8') + ')';
   $('frame').style.backgroundPositionX = (step * 50) + '%';
   $('frame').setAttribute('aria-label', actor.shots[step]);
-  $('product-caption').textContent = stage.detail;
+  $('fleet-demo').hidden = !isRunMate;
+  $('product-caption').textContent = detail;
   if (screen instanceof HTMLImageElement) {
-    const src = './sam/fleet-' + (step + 1) + '.webp';
+    const src = './sam/' + (isRunMate ? 'mate-screen-' : 'fleet-') + (step + 1) + '.webp';
     if (screen.getAttribute('src') !== src) screen.src = src;
-    screen.alt = stage.detail;
+    screen.alt = detail;
   }
   choices.forEach((button,i)=>button.setAttribute('aria-pressed',String(cast[i] === actor)));
   beats.forEach((button,i)=>button.setAttribute('aria-pressed',String(step === i)));
