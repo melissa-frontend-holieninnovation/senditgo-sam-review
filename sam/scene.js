@@ -1,22 +1,43 @@
 import { copy } from './approved.js';
 
+const fleetBase = 'https://melissa-frontend-holieninnovation.github.io/senditgo-carrier-demo/';
 const cast = [
-  { id:'mate', film:'run-mate-film.mp4?v=becca51740c6', name:'The Run Mate', bio:'Inspired by Samwise Gamgee, the mate who stays when the job gets hard. At the depot laptop, he helps the dispatcher fit a late drop into the run. She makes the final call.',
-    shots:['SAM types the order number into Fleet Web at the depot computer.', 'He finds a gap on Olivia Parker’s run and checks the impact on the map.', 'The dispatcher reviews the reassignment in Fleet Web.'] },
-  { id:'loader', film:'load-planner-film.mp4?v=3d1fcb4318d3', name:'The Load Planner', bio:'He checks the cartons against the space in the delivery SUV before the run leaves the depot.',
-    shots:['SAM opens the load plan on his laptop beside the two cartons.', 'He checks the width of the larger carton at the bench.', 'He points out the load plan on the laptop so his teammate can review it.'] },
-  { id:'relay', film:'relay-driver-film.mp4?v=66fbd6f50302', name:'The Relay Driver', bio:'He handles the late shift on a regional run. At changeover, he makes sure the incoming driver has the latest plan.',
-    shots:['At dusk, SAM checks the next run on the depot laptop.', 'He uses the radio to talk through the changeover.', 'The incoming driver takes the keyboard and reviews the run with SAM beside him.'] }
-];
-const stages = [
-  {detail:'Dispatch opens the order on Sophie Taylor’s route.'},
-  {detail:'Dispatch reviews the proposed insertion on Olivia Parker’s run and its estimated effect on time and distance.'},
-  {detail:'After reassignment, Order Status shows the order on Olivia’s receiving run sheet.'}
-];
-const mateScreenDetails = [
-  'SAM searches for order S0170025 on Sophie Taylor’s run.',
-  'Fleet Web previews the insertion on Olivia Parker’s run before the change is applied.',
-  'Fleet Web displays “Run Sheets updated” after the reassignment.'
+  {
+    id: 'mate', name: 'The Run Mate',
+    film: 'run-mate-film.mp4?v=becca51740c6', posterVersion: '7330d893be6e',
+    route: 'run-management/order-management/',
+    bio: 'Inspired by Samwise Gamgee, the mate who stays when the job gets hard. At the depot laptop, he helps the dispatcher fit a late drop into the run. She makes the final call.',
+    product: 'A dispatcher reassigns one order in this recorded Fleet Web example.',
+    chapters: [
+      { shot: 'SAM types the order number into Fleet Web at the depot computer.', screen: 'SAM searches for order S0170025 on Sophie Taylor’s run.', focus: [.5, 0] },
+      { shot: 'He finds a gap on Olivia Parker’s run and checks the impact on the map.', screen: 'Fleet Web previews the insertion on Olivia Parker’s run before the change is applied.', focus: [.57, .9] },
+      { shot: 'The dispatcher reviews the reassignment in Fleet Web.', screen: 'Fleet Web displays “Run Sheets updated” after the reassignment.', focus: [.85, .17] }
+    ]
+  },
+  {
+    id: 'loader', name: 'The Load Planner',
+    film: 'load-planner-film.mp4?v=0294ca390007', posterVersion: '51f71da8cb77',
+    route: 'fleets/nsw-metro/drivers/',
+    bio: 'Before the cartons leave the depot, he checks the vehicle’s load rating and dimensions.',
+    product: 'SAM looks up a van in Drivers and Vehicles.',
+    chapters: [
+      { shot: 'At the depot computer, SAM types the van’s registration into Fleet Web.', screen: 'The search for WV-005 brings up its vehicle record.', focus: [.27, .24] },
+      { shot: 'He opens the record to check the van’s make and model.', screen: 'Registration WV-005 belongs to a white Mercedes Sprinter.', focus: [.85, .5] },
+      { shot: 'He brings up the load rating and dimensions for the depot team.', screen: 'More vehicle details shows a load rating of 1,600 kg and a width of 1,990 mm.', focus: [.85, .57] }
+    ]
+  },
+  {
+    id: 'relay', name: 'The Relay Driver',
+    film: 'relay-driver-film.mp4?v=68706a7a90bd', posterVersion: 'b093740d6517',
+    route: 'run-management/run-sheets/',
+    bio: 'He handles the late shift on a regional run. At changeover, he makes sure the incoming driver has the latest plan.',
+    product: 'SAM opens the afternoon run sheet for the driver handover.',
+    chapters: [
+      { shot: 'At the depot laptop, SAM types Sophie Taylor’s name into Run Sheets.', screen: 'The search brings up Sophie Taylor’s run sheets.', focus: [.53, .16] },
+      { shot: 'He opens the afternoon run sheet to check its departure and stops.', screen: 'Run sheet 48214 lists six stops and a 13:00 depot departure.', focus: [.80, .37] },
+      { shot: 'He shows the incoming driver the first stop and its planned arrival.', screen: 'The first stop is for Yara Haddad in Parramatta, with arrival planned for 13:27.', focus: [.82, .35] }
+    ]
+  }
 ];
 const $ = id => document.getElementById(id);
 const choices = Array.from(document.querySelectorAll('#choices button'));
@@ -38,20 +59,20 @@ function stop() {
   $('control').textContent = film.ended ? 'Replay scene' : 'Play scene';
 }
 function paint() {
-  const isRunMate = actor.id === 'mate';
-  const detail = isRunMate ? mateScreenDetails[step] : stages[step].detail;
+  const chapter = actor.chapters[step];
   $('name').textContent = actor.name;
   $('bio').textContent = actor.bio;
-  $('caption').textContent = actor.shots[step];
-  $('frame').style.backgroundImage = 'url(./sam/' + actor.id + '.webp?v=' + (actor.id === 'mate' ? '7330d893be6e' : '8') + ')';
+  $('caption').textContent = chapter.shot;
+  $('frame').style.backgroundImage = 'url(./sam/' + actor.id + '.webp?v=' + actor.posterVersion + ')';
   $('frame').style.backgroundPositionX = (step * 50) + '%';
-  $('frame').setAttribute('aria-label', actor.shots[step]);
-  $('fleet-demo').hidden = !isRunMate;
-  $('product-caption').textContent = detail;
+  $('frame').setAttribute('aria-label', chapter.shot);
+  $('fleet-demo').href = fleetBase + actor.route;
+  $('product-context').textContent = actor.product;
+  $('product-caption').textContent = chapter.screen;
   if (screen instanceof HTMLImageElement) {
-    const src = './sam/' + (isRunMate ? 'mate-screen-' : 'fleet-') + (step + 1) + '.webp';
+    const src = './sam/' + actor.id + '-screen-' + (step + 1) + '.webp';
     if (screen.getAttribute('src') !== src) screen.src = src;
-    screen.alt = detail;
+    screen.alt = chapter.screen;
   }
   choices.forEach((button,i)=>button.setAttribute('aria-pressed',String(cast[i] === actor)));
   beats.forEach((button,i)=>button.setAttribute('aria-pressed',String(step === i)));
@@ -140,7 +161,8 @@ function enlarge() {
   if (zoom instanceof HTMLImageElement && screen instanceof HTMLImageElement) { zoom.src = screen.src; zoom.alt = screen.alt; }
   modal.showModal();
   const panel = document.querySelector('.zoom-pan');
-  panel.scrollTo({left:Math.max(0,(panel.scrollWidth-panel.clientWidth)*.5), top:step===1 ? panel.scrollHeight : 0});
+  const [x,y] = actor.chapters[step].focus;
+  panel.scrollTo({left:panel.scrollWidth*x - panel.clientWidth/2, top:panel.scrollHeight*y - panel.clientHeight/2});
 }
 $('enlarge').addEventListener('click',enlarge);
 $('web-screen').addEventListener('click',enlarge);
