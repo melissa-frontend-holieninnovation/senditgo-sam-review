@@ -1,0 +1,44 @@
+@font-face{font-family:Sendit;src:url(display.woff) format('woff');font-display:swap}
+:root{color-scheme:light;--paper:#fff;--navy:#3e3a39;--blue:#007fff;--line:#d9dee2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--navy);font:16px/1.5 Inter,system-ui,sans-serif}
+header,main{width:min(1260px,92%);margin-inline:auto}
+header{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+header img{width:116px}header span{font-size:13px}
+main{padding:clamp(25px,4vw,54px) 0 50px}
+h1,h2,p,figure{margin:0}
+h1{font:normal clamp(32px,4.6vw,66px)/1.05 Sendit,system-ui;letter-spacing:-.035em;max-width:23ch}
+#choices{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}
+button{font:inherit;color:inherit;cursor:pointer}
+#choices button,#tools button,dialog button{background:transparent;border:1px solid #80919a;border-radius:5px;padding:9px 15px;min-height:44px;font-size:14px;font-weight:650}
+#choices button[aria-pressed=true]{background:#edf6ff;border-color:var(--blue);color:#004a8f}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #087ba7;outline-offset:3px}
+#study{display:grid;grid-template-columns:minmax(250px,.8fr) minmax(0,1.3fr);background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.frame-wrap{background:#f0f3f5;display:grid;align-items:center}
+#frame{aspect-ratio:1;background-position:0% center;background-repeat:no-repeat;background-size:300% 100%}
+.scene{padding:clamp(19px,2.6vw,36px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:12px}
+h2{font:normal clamp(28px,3.1vw,44px)/1.1 Sendit,system-ui}#bio{max-width:62ch;color:#4e5054}
+#beats{width:100%;display:flex;gap:6px}
+#beats button{border:0;border-bottom:3px solid var(--line);background:transparent;padding:8px 0;text-align:left;flex:1;font-size:14px;min-height:44px}
+#beats button[aria-pressed=true]{border-color:var(--blue);font-weight:750}
+#caption{font-size:15px;min-height:3em}
+#tools{display:flex;gap:8px;flex-wrap:wrap}#tools button:first-child{background:#fff;color:#005cae;border-color:#007fff}
+#status{font-size:13px}#status:empty{display:none}#fallback{width:100%;padding:8px}
+.product{width:100%;margin-top:5px;padding-top:14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.product h2{font:650 15px/1.25 Inter,system-ui;margin-bottom:4px}
+.product p{font-size:13px;color:#555c60;margin:4px 0}
+#product-caption{font-weight:650;color:var(--navy)}
+#enlarge{background:#fff;border:1px solid var(--line);border-radius:8px;padding:0;width:100%;overflow:hidden;text-align:right}
+#enlarge img{width:100%;height:auto;display:block}#enlarge span{display:block;padding:6px 12px;font-size:13px;font-weight:650}
+details{border-top:1px solid var(--line);margin-top:26px;padding:14px 0}summary{cursor:pointer;font-weight:650;min-height:44px}details p{max-width:76ch}
+dialog{padding:0;border:0;border-radius:8px;color:var(--navy);width:min(1600px,97vw);max-width:97vw;max-height:94dvh;background:white}dialog::backdrop{background:#101e2bd9}
+.dialog-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.dialog-bar p{font-weight:650}.dialog-bar button{white-space:nowrap}
+.zoom-pan{overflow:auto;max-height:calc(94dvh - 65px);overscroll-behavior:contain}.zoom-pan img{display:block;width:1536px;max-width:none;height:auto}
+@media(max-width:700px){header,main{width:calc(100% - 32px)}#study,.product{grid-template-columns:1fr}.frame-wrap{background:transparent}#frame{width:min(100%,440px);margin:auto}#choices{gap:6px;margin:17px 0}#choices button{font-size:13px;padding:8px 10px}#caption{min-height:0}.product{gap:8px}.dialog-bar p{font-size:13px}}
+
+@media(min-width:701px){.product{display:grid;grid-template-columns:minmax(210px,.6fr) minmax(0,1.4fr);gap:32px;align-items:start;padding:26px 0}.product #enlarge{margin:0}.frame-wrap{align-self:start}}
+
+#frame{position:relative;overflow:hidden;width:100%}
+#performance{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.frame-wrap figcaption{padding:8px 14px;background:#f0f3f5;color:#3e3a39;font-size:13px}
